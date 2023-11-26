@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import torch
 import segmentation_models_pytorch as smp
 import segmentation_models_pytorch.utils
