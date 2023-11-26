@@ -20,7 +20,7 @@ def main():
     parser.add_argument('--encoder_name', type=str, default='efficientnet-b0', help='название энкодера')
     parser.add_argument('--activation', type=str, default='softmax2d', help='функция активации')
     parser.add_argument('--classes', type=str, default='tower', help='список классов, разделенных запятыми')
-
+    parser.add_argument('--device', type=int, default=0, help='номер GPU для использования (по умолчанию 0)')
 
     args = parser.parse_args()
 
@@ -42,7 +42,14 @@ def main():
         activation=args.activation
     )
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # Установка устройства
+    if torch.cuda.is_available() and args.device >= 0:
+        device = torch.device(f'cuda:{args.device}')
+    else:
+        device = torch.device('cpu')
+
+    print(f'Используется устройство: {device}')
+    
     model.to(device)
 
     # Параметры обучения
@@ -124,7 +131,7 @@ def main():
             max_score = valid_logs['iou_score']
             torch.save(model, os.path.join(output_folder, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth'))
             print('save best model')
-            
+
 
 if __name__ == '__main__':
     main()
