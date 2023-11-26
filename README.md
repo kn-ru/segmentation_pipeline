@@ -3,17 +3,15 @@
 This project includes a script for training a segmentation model using the PyTorch library and segmentation_models_pytorch (smp).
 
 ## Features
-
-    Utilizes pre-trained encoders from the smp library.
-    Supports various segmentation model architectures.
-    Easy customization of training parameters via command-line arguments.
-    Automatic splitting of data into training and validation sets.
-    Integration with TensorBoard for logging and visualizing training metrics.
+ - Utilizes pre-trained encoders from the smp library.
+ - Supports various segmentation model architectures.
+ - Easy customization of training parameters via command-line arguments.
+ - Automatic splitting of data into training and validation sets.
+ - Integration with TensorBoard for logging and visualizing training metrics.
 
 ## Requirements
 
 To run the script, the following libraries need to be installed:
-
     PyTorch
     torchvision
     segmentation_models_pytorch
@@ -38,7 +36,7 @@ The script supports the following command-line arguments:
 ## Example Run
 
 ```
-python train.py --data /path/to/data --epochs 20 --batch_size 8 --learning_rate 0.001 --model_name Unet --encoder_name resnet34 --activation softmax2d --classes class1,class2 --device 0
+python3 train.py --data /path/to/data --epochs 20 --batch_size 8 --learning_rate 0.001 --model_name Unet --encoder_name resnet34 --activation softmax2d --classes class1,class2 --device 0
 ```
 
 ## Data Structure
@@ -59,6 +57,6 @@ After running the script, a directory train_val_test will be created at the same
 
 ## Monitoring and Background Execution
 
-    TensorBoard: To visualize training logs, use TensorBoard by navigating to the output folder and running tensorboard --logdir=runs. You can also upload these logs to tensorboard.dev for sharing and remote access.
+**TensorBoard**: To visualize training logs, use TensorBoard by navigating to the output folder and running tensorboard --logdir=runs. You can also upload these logs to tensorboard.dev for sharing and remote access.
 
-    Running in Background: For continuous training, you can use pm2 to run the script in the background. Create a main.sh bash script with the command python3 train.py and your desired arguments. Then, use pm2 start main.sh to initiate the training process in the background.
+**Running in Background:** For continuous training, you can use pm2 to run the script in the background. Create a main.sh bash script with the command python3 train.py and your desired arguments. Then, use pm2 start main.sh to initiate the training process in the background.
