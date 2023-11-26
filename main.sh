@@ -1,0 +1,1 @@
+python3 train.py --data /path/to/data --epochs 20 --batch_size 8 --learning_rate 0.001 --model_name Unet --encoder_name resnet34 --activation softmax2d --classes class1,class2 --device 0
