@@ -124,6 +124,7 @@ def main():
             max_score = valid_logs['iou_score']
             torch.save(model, os.path.join(output_folder, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth'))
             print('save best model')
+            
 
 if __name__ == '__main__':
     main()
