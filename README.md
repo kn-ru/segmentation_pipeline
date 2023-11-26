@@ -1,6 +1,6 @@
 ## Training Pipeline for Segmentation Models using segmentation_models_pytorch
 
-This project includes a script for training a segmentation model using the PyTorch library and segmentation_models_pytorch (smp).
+This project includes a script for training a segmentation model using the PyTorch library and segmentation_models_pytorch ([smp](https://github.com/qubvel/segmentation_models.pytorch)).
 
 ## Features
  - Utilizes pre-trained encoders from the smp library.
