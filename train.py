@@ -140,7 +140,7 @@ def main():
 
         if max_score < valid_logs['iou_score']:
             max_score = valid_logs['iou_score']
-            model_save_path = os.path.join(unique_run_path, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth')
+            model_save_path = os.path.join(unique_run_path, f'model_{args.model_name}_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth')
             torch.save(model, model_save_path)
             print(f'Saving best model to {model_save_path}')
 
