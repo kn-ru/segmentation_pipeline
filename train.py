@@ -60,9 +60,10 @@ def main():
     # Data preparation
     preprocessing_fn = smp.encoders.get_preprocessing_fn(args.encoder_name, 'imagenet')
 
-    # Create output folder
-    output_folder = args.output_folder
-    os.makedirs(output_folder, exist_ok=True)
+    # Unique path for saving weights and TensorBoard logs
+    date_time_user = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_{getpass.getuser()}"
+    unique_run_path = os.path.join(args.output_folder, 'runs', date_time_user)
+    os.makedirs(unique_run_path, exist_ok=True)
 
     # Data processing
     parent_folder = os.path.dirname(args.data)
@@ -101,7 +102,7 @@ def main():
     valid_loader = DataLoader(dataset=valid_dataset, batch_size=args.batch_size, shuffle=False)
 
     # TensorBoard setup
-    writer = SummaryWriter()
+    writer = SummaryWriter(log_dir=os.path.join(unique_run_path, 'tensorboard_logs'))
 
     # Training and validation epochs
     train_epoch = smp.utils.train.TrainEpoch(
@@ -137,8 +138,9 @@ def main():
 
         if max_score < valid_logs['iou_score']:
             max_score = valid_logs['iou_score']
-            torch.save(model, os.path.join(output_folder, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth'))
-            print('Saving best model')
+            model_save_path = os.path.join(unique_run_path, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth')
+            torch.save(model, model_save_path)
+            print(f'Saving best model to {model_save_path}')
 
     # Close TensorBoard writer
     writer.close()
