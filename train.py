@@ -12,6 +12,7 @@ def main():
     # Разбор аргументов командной строки
     parser = argparse.ArgumentParser(description='Обучение сегментационной модели с использованием smp')
     parser.add_argument('--data', type=str, default='', help='путь к данным для обработки')
+    parser.add_argument('--output_folder', type=str, default='./outputs', help='путь к выходным данным')
     parser.add_argument('--epochs', type=int, default=10, help='количество эпох обучения')
     parser.add_argument('--batch_size', type=int, default=4, help='размер батча')
     parser.add_argument('--learning_rate', type=float, default=0.0003, help='скорость обучения')
@@ -19,6 +20,7 @@ def main():
     parser.add_argument('--encoder_name', type=str, default='efficientnet-b0', help='название энкодера')
     parser.add_argument('--activation', type=str, default='softmax2d', help='функция активации')
     parser.add_argument('--classes', type=str, default='tower', help='список классов, разделенных запятыми')
+
 
     args = parser.parse_args()
 
@@ -53,19 +55,23 @@ def main():
     # Подготовка данных
     preprocessing_fn = smp.encoders.get_preprocessing_fn(args.encoder_name, 'imagenet')
 
+    # Создание папки с результатами
+    output_folder = args.output_folder
+    os.makedirs(output_folder, exist_ok=True)
+
 
     # Обработка данных
     parent_folder = os.path.dirname(args.data)
-    output_folder = os.path.join(parent_folder, "train_val_test")
-    if not os.path.exists(output_folder):
+    data_folder = os.path.join(parent_folder, "train_val_test")
+    if not os.path.exists(data_folder):
         print("Разделение данных...")
-        os.makedirs(output_folder, exist_ok=True)
-        splitfolders.ratio(args.data, output=output_folder, seed=42, ratio=(.8, .2), group_prefix=None, move=False)
-        print(f"Данные разделены и сохранены в {output_folder}")
+        os.makedirs(data_folder, exist_ok=True)
+        splitfolders.ratio(args.data, output=data_folder, seed=42, ratio=(.8, .2), group_prefix=None, move=False)
+        print(f"Данные разделены и сохранены в {data_folder}")
     else:
-        print(f"Папка {output_folder} уже существует. Пропускаем разделение данных.")
-    train_dir = os.path.join(output_folder, "train")
-    val_dir = os.path.join(output_folder, "val")
+        print(f"Папка {data_folder} уже существует. Пропускаем разделение данных.")
+    train_dir = os.path.join(data_folder, "train")
+    val_dir = os.path.join(data_folder, "val")
     x_train_dir = os.path.join(train_dir, "images")
     y_train_dir = os.path.join(train_dir, "masks")
     x_val_dir = os.path.join(val_dir, "images")
@@ -116,7 +122,8 @@ def main():
         valid_logs = valid_epoch.run(valid_loader)
         if max_score < valid_logs['iou_score']:
             max_score = valid_logs['iou_score']
-        torch.save(model, f'output/model_{ENCODER}_epochs{i}_patch{patch_size}_batch{BATCH_SIZE}.pth')
+            torch.save(model, os.path.join(output_folder, f'model_{args.encoder_name}_epochs{epoch}_batch{args.batch_size}.pth'))
+            print('save best model')
 
 if __name__ == '__main__':
     main()
