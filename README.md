@@ -60,3 +60,6 @@ After running the script, a directory train_val_test will be created at the same
 **TensorBoard**: To visualize training logs, use TensorBoard by navigating to the output folder and running tensorboard --logdir=runs. You can also upload these logs to tensorboard.dev for sharing and remote access.
 
 **Running in Background:** For continuous training, you can use pm2 to run the script in the background. Create a main.sh bash script with the command python3 train.py and your desired arguments. Then, use pm2 start main.sh to initiate the training process in the background.
+```
+pm2 start main.sh --name "train segmentation model" 
+```
